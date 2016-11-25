@@ -1,6 +1,6 @@
 #include "comm.h"
 #include "helpers.h"
-#include "parameters.h"
+#include "CONFIG.h"
 
 char buffer[PACKET_LENGTH] = {0,0,0,0,0,0,0,0,0,0};
 

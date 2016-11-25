@@ -1,6 +1,6 @@
 #include "m_general.h"
 #include "localization.h"
-#include "parameters.h"
+#include "CONFIG.h"
 
 POINT *pos_wii, *pos;
 float th;

@@ -1,6 +1,6 @@
 #include "m_general.h"
 #include "timers.h"
-#include "parameters.h"
+#include "CONFIG.h"
 
 void initTimer1(){
 	

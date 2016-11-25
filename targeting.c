@@ -1,5 +1,5 @@
 #include "helpers.h"
-#include "parameters.h"
+#include "CONFIG.h"
 #include "targeting.h"
 
 void setTarget(){

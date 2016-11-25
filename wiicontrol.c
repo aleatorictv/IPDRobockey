@@ -1,6 +1,6 @@
 #include "helpers.h"
 #include "wiicontrol.h"
-#include "parameters.h"
+#include "CONFIG.h"
 
 int blobs[12] ={0,0,0,0,0,0,0,0,0,0,0,0};
 POINT *currentPos=NULL;

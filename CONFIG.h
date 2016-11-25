@@ -1,5 +1,5 @@
-#ifndef parameters__
-#define parameters__
+#ifndef CONFIG__
+#define CONFIG__
 
 #define SYSCLOCK 16000000
 #define WIIFREQ 10

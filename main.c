@@ -18,7 +18,7 @@ qualifying test
 #include "localization.c"
 #include "helpers.h"
 #include "helpers.c"
-#include "parameters.h"
+#include "CONFIG.h"
 #include "timers.h"
 #include "timers.c"
 #include "wiicontrol.h"
