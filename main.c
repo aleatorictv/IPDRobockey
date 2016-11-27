@@ -52,8 +52,9 @@ int main(void)
 	while (1)
 	{
 		if(comm_flag){
-			parseComm(*buffer);
+			parseComm();
 			comm_flag = 0;
+			
 		}
 		if(wii_flag){
 			robotPos = locateBot();
@@ -65,15 +66,13 @@ int main(void)
 		}
 		gotoPos = setTarget(goalPos,robotPos,puck);
 		
-		if(playing()) { 
-			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+		if(playing()){
+			 moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+			 if(TEST_FWD) setMotors(100,100);
+			 if(TEST_BKD) setMotors(-255,-255);
 		}
 		else stop();
 		
-		
-		m_red(ON);
-		if(TEST_FWD) setMotors(255,255);
-		if(TEST_BKD) setMotors(-255,-255);
 		
 	}
 }
@@ -124,10 +123,8 @@ ISR(TIMER3_COMPA_vect){ //check wii at timer3
 	if(!comm_flag) wii_flag=1;	//if comm flag is on, don't run wii check
 }
 ISR(INT2_vect){	//mRF flag
-	if(wii_flag){		//if wii flag is on, cancel it and run comm
-		comm_flag = 1;	
-		wii_flag=0;
-	}
+	if(wii_flag)wii_flag=0;		//if wii flag is on, cancel it and run comm	
+	comm_flag=1;
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
 }

@@ -16,13 +16,12 @@ int playing(){
 		return canPlay;
 	}else return TRUE;
 }
-void parseComm(int *buffer){
+void parseComm(){
 	m_rf_read(buffer,PACKET_LENGTH);
 	
-	m_green(TOGGLE);
-
 	if(buffer[0]==commtest){
 		canPlay=FALSE;
+		
 		//make LED blink
 	}
 
@@ -51,8 +50,17 @@ void parseComm(int *buffer){
 	else if(buffer[0]==gameover){
 		//turn motor off or cut power
 		canPlay = FALSE;
+	}else{
+		canPlay=FALSE;
 	}
 	
+	if(canPlay){
+		m_red(OFF);
+		m_green(ON);
+	}else{
+		m_green(OFF);
+		m_red(ON);
+	}
 }
 void initComm(){
 	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
