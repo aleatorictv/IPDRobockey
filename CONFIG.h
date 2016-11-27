@@ -2,11 +2,11 @@
 #define CONFIG__
 
 #define SYSCLOCK 16000000
-#define WIIFREQ 10
-#define PUCKFREQ 5;
+#define WIIFREQ 200
+#define PUCKFREQ 5
 
 
-#define RXADDRESS 0x60
+#define RXADDRESS 96
 #define CHANNEL 1
 #define PACKET_LENGTH 10
 
@@ -19,7 +19,7 @@
 #define AIM_RIGHT 1
 
 
-#define DEBUG_ON 1
+#define DEBUG_ON 0
 #define DEBUG_POINT 1
 #define DEBUG_IR 0
 #define TEST_FWD 1

@@ -43,20 +43,19 @@ volatile int comm_flag = 0;
 volatile int puck_flag = 0;
 int puck=0;
 
+
 void init();
 
 int main(void)
 {
 	init();
-	m_usb_init();
 	while (1)
 	{
-		
 		if(comm_flag){
-			parseComm();
+			parseComm(*buffer);
 			comm_flag = 0;
 		}
-		/*if(wii_flag){
+		if(wii_flag){
 			robotPos = locateBot();
 			wii_flag = 0;
 		}
@@ -64,32 +63,44 @@ int main(void)
 			puck = findPuck();
 			puck_flag = 0;
 		}
-		
 		gotoPos = setTarget(goalPos,robotPos,puck);
-		*/
+		
 		if(playing()) { 
-			//moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
 		}
-		else if(TEST_FWD) setMotors(255,255);
-		else if(TEST_BKD) setMotors(-255,-255);
 		else stop();
+		
+		
+		m_red(ON);
+		if(TEST_FWD) setMotors(255,255);
+		if(TEST_BKD) setMotors(-255,-255);
 		
 	}
 }
 void init(){
 	m_clockdivide(0);
 	sei();
+	m_green(ON);
+	if(DEBUG_ON){
+		m_usb_init();
+		m_usb_tx_string("USB connected.\n");
+	}
+	initMotors();
 	initTimer0();
 	initTimer1();
 	initTimer3();
-	initComm();
-	initMotors();
 	initADC();
-	
-	if(DEBUG_ON) !m_usb_rx_available();
-	if(NEED_WII) {
-		set(TWCR,TWEN);
-		!m_wii_open();}
+	if(NEED_WII){
+		while(!m_wii_open()){
+			m_red(ON);
+		}
+		m_red(OFF);
+	}
+	m_green(OFF);
+	if(NEED_COMM){
+		initComm();
+	}
+
 	if(FULLCOURT){
 		if(AIM_RIGHT) goalPos = initPoint(1000,CENTER_Y);
 		else goalPos = initPoint(0,CENTER_Y); 
@@ -110,10 +121,13 @@ ISR( TIMER0_COMPA_vect){  //check puck at timer0
 	puck_flag=1;
 }
 ISR(TIMER3_COMPA_vect){ //check wii at timer3 
-	wii_flag=1;
-	comm_flag = 1;
+	if(!comm_flag) wii_flag=1;	//if comm flag is on, don't run wii check
 }
 ISR(INT2_vect){	//mRF flag
+	if(wii_flag){		//if wii flag is on, cancel it and run comm
+		comm_flag = 1;	
+		wii_flag=0;
+	}
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
 }

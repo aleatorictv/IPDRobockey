@@ -14,7 +14,7 @@ void initTimer0(){ //puck finding timer 750Hz
 	
 	OCR0A = freq/PUCKFREQ; //PUCKFREQ = 5 > polls at 750Hz
 	
-	set(TIMSK1,OCIE1A ); //comparison interrupt up
+	set(TIMSK0,OCIE0A ); //comparison interrupt up
 	
 }
 void initTimer1(){	//motor PWM timer uses built in compare pins B5/B6
@@ -47,7 +47,7 @@ void initTimer3() {
 	clear(TCCR3A,WGM31);
 	clear(TCCR3A, WGM30);
 
-	OCR3A =  freq/WIIFREQ;  //WIIFREQ =10 > poll at 1.5kHz
+	OCR3A =  freq/WIIFREQ;  //WIIFREQ =200 > poll at 75Hz
 
 	set(TIMSK3,OCIE3A);//compare to OCR3A
 }

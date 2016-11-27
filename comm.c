@@ -1,8 +1,6 @@
-#include "comm.h"
-#include "helpers.h"
 #include "CONFIG.h"
-
-char buffer[PACKET_LENGTH] = {0,0,0,0,0,0,0,0,0,0};
+#include "helpers.h"
+#include "comm.h"
 
 char commtest = 0xA0;
 char play = 0xA1;
@@ -10,15 +8,17 @@ char pause = 0xA4;
 char halftime = 0xA6;
 char gameover = 0xA7;
 
+char buffer[PACKET_LENGTH] = {0,0,0,0,0,0,0,0,0,0};
 int canPlay = FALSE;
 
 int playing(){
-	if(NEED_COMM){
+	if(NEED_COMM){	//if RF is needed then its a real test otherwise just run
 		return canPlay;
 	}else return TRUE;
 }
-void parseComm(){
+void parseComm(int *buffer){
 	m_rf_read(buffer,PACKET_LENGTH);
+	
 	m_green(TOGGLE);
 
 	if(buffer[0]==commtest){
@@ -52,12 +52,9 @@ void parseComm(){
 		//turn motor off or cut power
 		canPlay = FALSE;
 	}
+	
 }
 void initComm(){
-	m_bus_init(); //enable mBUS
 	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
 	canPlay = FALSE;
-
-	set(DDRB,6); // set pin b6 as output
-	set(DDRB,5); //set pinb5 as output
 }
