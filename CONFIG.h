@@ -5,7 +5,8 @@
 #define WIIFREQ 10
 #define PUCKFREQ 5;
 
-#define RXADDRESS 0x0A
+
+#define RXADDRESS 0x60
 #define CHANNEL 1
 #define PACKET_LENGTH 10
 
@@ -18,12 +19,13 @@
 #define AIM_RIGHT 1
 
 
-#define DEBUG_ON 0
+#define DEBUG_ON 1
 #define DEBUG_POINT 1
 #define DEBUG_IR 0
-#define TEST_FWD 0
+#define TEST_FWD 1
 #define TEST_BKD 0
-#define QUALIFYING 0S
+#define FIND_CTR 0
+#define QUALIFYING 0
 #define NEED_WII 1
 #define NEED_COMM 1
 

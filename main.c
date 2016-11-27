@@ -51,11 +51,12 @@ int main(void)
 	m_usb_init();
 	while (1)
 	{
+		
 		if(comm_flag){
 			parseComm();
 			comm_flag = 0;
 		}
-		if(wii_flag){
+		/*if(wii_flag){
 			robotPos = locateBot();
 			wii_flag = 0;
 		}
@@ -64,9 +65,11 @@ int main(void)
 			puck_flag = 0;
 		}
 		
-		gotoPos = setTarget(robotPos,puck);
-		
-		if(playing()) moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+		gotoPos = setTarget(goalPos,robotPos,puck);
+		*/
+		if(playing()) { 
+			//moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+		}
 		else if(TEST_FWD) setMotors(255,255);
 		else if(TEST_BKD) setMotors(-255,-255);
 		else stop();
@@ -76,30 +79,41 @@ int main(void)
 void init(){
 	m_clockdivide(0);
 	sei();
+	initTimer0();
+	initTimer1();
 	initTimer3();
 	initComm();
 	initMotors();
 	initADC();
+	
 	if(DEBUG_ON) !m_usb_rx_available();
-	if(NEED_WII) !m_wii_open();
+	if(NEED_WII) {
+		set(TWCR,TWEN);
+		!m_wii_open();}
 	if(FULLCOURT){
 		if(AIM_RIGHT) goalPos = initPoint(1000,CENTER_Y);
 		else goalPos = initPoint(0,CENTER_Y); 
-	}else{
+	}else if(FIND_CTR){
 		goalPos = initPoint(CENTER_X,CENTER_Y);  //debug to go to center ice
+	}else if(QUALIFYING){
+		robotPos = locateBot();
+		if(robotPos->x < CENTER_X){
+			goalPos = initPoint(950,CENTER_Y);
+		}else{
+			goalPos = initPoint(50,CENTER_Y);
+		}
 	}
 	
 }
 
-ISR( TIMER0_COMPA_vect)  //interrupt handler up
-{
+ISR( TIMER0_COMPA_vect){  //check puck at timer0
 	puck_flag=1;
 }
-ISR(TIMER3_COMPA_vect){
+ISR(TIMER3_COMPA_vect){ //check wii at timer3 
 	wii_flag=1;
-}
-ISR(INT2_vect){
 	comm_flag = 1;
+}
+ISR(INT2_vect){	//mRF flag
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
 }

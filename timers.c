@@ -2,7 +2,7 @@
 #include "timers.h"
 #include "CONFIG.h"
 
-void initTimers0(){ //puck finding timer 750Hz
+void initTimer0(){ //puck finding timer 750Hz
 	float freq = SYSCLOCK/1024.;
 	set(TCCR0B,CS02);//timer 1 /1024 = 16kHz
 	clear(TCCR0B,CS01);

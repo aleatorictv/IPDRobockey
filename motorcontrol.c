@@ -28,13 +28,13 @@ void stop()	{
 }
 
 void setMotors(int L, int R){	//input duty cycles as signed ints
-	if(L < 0) clear(PORTB , 4);	//left motor dir and duty cycle
-	else set(PORTB,4);
+	if(L < 0) set(PORTB , 4);	//left motor dir and duty cycle
+	else clear(PORTB,4);
 	if(abs(L)>255) L=255;
-	else OCR1A = abs(L);
+	OCR1A = abs(L);
 	
 	if(R < 0) clear(PORTC , 6); //right motor dir and duty cycle
 	else set(PORTC,6);
 	if(abs(R)>255) R=255;
-	else OCR1A = abs(R);
+	OCR1B = abs(R);
 }

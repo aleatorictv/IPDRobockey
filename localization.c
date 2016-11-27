@@ -7,12 +7,10 @@ float th;
 int axisL=0;
 int pairs[12]={1,2,1,3,1,4,2,3,2,4,3,4};
 POINT *pts[4];
+POINT *v1, *v2;
 int dists[6];
 int n;
 
-float dotprod(float *v1, float *v2){
-	return v1[0]*v1[0] + v2[1]*v2[1];
-}
 POINT *findPos(int* blobs){
 	memset(&dists[0], 0, sizeof(dists));  //clear distance array
 	for(int i=0;i<4;i++) free(pts[i]);	//clear POINT pointers
@@ -40,12 +38,7 @@ int parseBlobs(int* blobs){
 	if(n<3) return 0;
 	return 1;
 }
-POINT *initPoint(int x,int y){	
-	POINT *pt = (POINT *) malloc(sizeof(POINT));
-	pt->x = x;
-	pt->y = y;
-	return pt;
-}
+
 int findDists(){ //find unique distances between points
 	if(n==4){
 		int k=0;
@@ -106,13 +99,15 @@ int findNS(){
 	}
 	
 	if(trueA && trueB){
-		pos_wii->x = (pts[trueB]->x + pts[trueA]->x)/2 ; //position is average of axis
+		pos_wii->x = (pts[trueB]->x + pts[trueA]->x)/2 ; //position is center of axis
 		pos_wii->y = (pts[trueB]->y + pts[trueA]->y)/2 ;
+		
 		float vect1[] = {pts[trueB]->x- pts[trueA]->x, pts[trueB]->y- pts[trueA]->y };	//vector of constellation axis in camera view
 		float vect2[] = {0, 1};//vector of camera frame vertical
-		float th = acos(dotprod(vect1,vect2)/sqrt(dotprod(vect1,vect1)));
-		if(pts[trueB]->x > pts[trueA]->x) th = -th;
-		pos->x = (pos_wii->x - CENTER_X) * cos(th) + (pos_wii->y-CENTER_Y) *-sin(th)+CENTER_X;
+		//float th = angleBtwnF(vect1,vect2); // maybe faster not to worry about 2 dot prods
+		float th = acos(dotprod(vect1,vect2)/sqrt(dotprod(vect1,vect1)));  //angle between frame and true North
+		if(pts[trueB]->x > pts[trueA]->x) th = -th;	//flip sign if in quadrant 3/4
+		pos->x = (pos_wii->x - CENTER_X) * cos(th) + (pos_wii->y-CENTER_Y) *-sin(th)+CENTER_X; //homogeneous transform pi about y to get view from above
 		pos->y = (pos_wii->y - CENTER_Y) * sin(th) + (pos_wii->y-CENTER_Y) * cos(th)+CENTER_Y;
 		}
 	return 1;

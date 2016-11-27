@@ -1,4 +1,4 @@
 #ifdef targeting__
 #define targeting__
-POINT *setTarget(POINT *p, int _puck);
+POINT *setTarget(POINT *g, POINT *r, int _puck);
 #endif

@@ -22,20 +22,11 @@ void parseComm(){
 	m_green(TOGGLE);
 
 	if(buffer[0]==commtest){
-		
-		// while(1){
-		clear(PORTB,5);
-		toggle(PORTB,6); //flash positioning led pin
-		// m_wait(1);
-
-		// }
-
+		canPlay=FALSE;
+		//make LED blink
 	}
 
 	else if(buffer[0]==play){
-		clear(PORTB,6);
-		set(PORTB,5); //turn positioning led on
-		//move lil b
 		canPlay = TRUE;
 	}
 
@@ -48,10 +39,8 @@ void parseComm(){
 	// }
 
 	else if(buffer[0]==pause){
-		m_wait(3000);
 		canPlay = FALSE;
-		//kill a b
-		//stop within 3 seconds - turn motor off or cut power
+		
 	}
 
 	else if(buffer[0]==halftime){
