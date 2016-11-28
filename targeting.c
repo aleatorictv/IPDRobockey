@@ -5,8 +5,9 @@ POINT *motorPT = NULL;
 
 //INPUT goal position, robot position, puck location
 //OUTPUT "POINT" variable with motor speeds and directions
-POINT *setTarget(POINT *g, POINT *r, int puck){	
-	if(motorPT == NULL) motorPT = initPoint(0,0);
+POINT *setTarget(POINT *g, POINT *r, int puck){
+	if(motorPT != NULL) free(motorPT);
+	motorPT=initPoint(0,0);
 	
 	if(puck>0){  //target puck
 		switch(puck){
@@ -27,6 +28,7 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 		
 	}
 	if(QUALIFYING){
+		
 		float targetTh = angleBtwn(g, r);
 		float targetD = distance(g->x,g->y,r->x,r->y);
 		if(abs(targetTh) > 0.1) {

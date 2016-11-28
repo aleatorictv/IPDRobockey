@@ -27,8 +27,14 @@ int dotprod(int *v1, int *v2){
 float dotprodF(float *f1, float *f2){
 	return f1[0]*f1[0] + f2[1]*f2[1];
 }
-void sendBuffer(char *buff){
-	for(int i=0;i<strlen(buff);i++) m_usb_tx_char(*(buff+1));
+//void sendBuffer(char *buff){
+	//for(int i=0;i<strlen(buff);i++) m_usb_tx_char(*(buff+1));
+//}
+void sendBuffer(char *buf) {
+	int i;
+	for (i=0; i< strlen(buf); i++) {
+		m_usb_tx_char(*(buf+i));
+	}
 }
 void sendFloat(float f){
 	sprintf(buff,"%.3f\n",f);

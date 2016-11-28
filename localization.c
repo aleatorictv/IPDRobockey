@@ -16,7 +16,7 @@ POINT *findPos(int* blobs){
 	for(int i=0;i<4;i++) free(pts[i]);	//clear POINT pointers
 	
 	if(!parseBlobs(blobs))return NULL;  //if anything goes wrong, no position reported
-	if(!!findDists()) return NULL;
+	if(!findDists()) return NULL;
 	if(findNS()) return NULL;
 	if(rinkTransform()) return pos;  //if 3 or 4 points visible, position reported
 	else return NULL;

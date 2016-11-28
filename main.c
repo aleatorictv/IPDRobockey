@@ -42,7 +42,7 @@ volatile int wii_flag = 0;
 volatile int comm_flag = 0;
 volatile int puck_flag = 0;
 int puck=0;
-
+int c = 0; //count a bunch of times of wii timer to reopen comm interval
 
 void init();
 
@@ -61,18 +61,16 @@ int main(void)
 			wii_flag = 0;
 		}
 		if(puck_flag){
-			puck = findPuck();
+			puck = 0;// findPuck();
 			puck_flag = 0;
 		}
 		gotoPos = setTarget(goalPos,robotPos,puck);
-		
 		if(playing()){
-			 moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
-			 if(TEST_FWD) setMotors(100,100);
-			 if(TEST_BKD) setMotors(-255,-255);
+			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+			if(TEST_FWD) setMotors(100,100);
+			if(TEST_BKD) setMotors(-255,-255);
 		}
 		else stop();
-		
 		
 	}
 }
@@ -95,23 +93,23 @@ void init(){
 		}
 		m_red(OFF);
 	}
+	if(NEED_COMM)	initComm();
+	
+	m_wait(800);
 	m_green(OFF);
-	if(NEED_COMM){
-		initComm();
-	}
-
 	if(FULLCOURT){
 		if(AIM_RIGHT) goalPos = initPoint(1000,CENTER_Y);
-		else goalPos = initPoint(0,CENTER_Y); 
-	}else if(FIND_CTR){
-		goalPos = initPoint(CENTER_X,CENTER_Y);  //debug to go to center ice
-	}else if(QUALIFYING){
+		else goalPos = initPoint(0,CENTER_Y);
+		}else if(FIND_CTR){
+			goalPos = initPoint(CENTER_X,CENTER_Y);  //debug to go to center ice
+		}else if(QUALIFYING){
 		robotPos = locateBot();
-		if(robotPos->x < CENTER_X){
-			goalPos = initPoint(950,CENTER_Y);
-		}else{
-			goalPos = initPoint(50,CENTER_Y);
-		}
+			if(robotPos->x < CENTER_X){
+				goalPos = initPoint(950,CENTER_Y);
+				}else{
+				goalPos = initPoint(50,CENTER_Y);
+			}
+			m_usb_tx_string("initialize\n");
 	}
 	
 }
@@ -119,12 +117,15 @@ void init(){
 ISR( TIMER0_COMPA_vect){  //check puck at timer0
 	puck_flag=1;
 }
-ISR(TIMER3_COMPA_vect){ //check wii at timer3 
-	if(!comm_flag) wii_flag=1;	//if comm flag is on, don't run wii check
+ISR(TIMER3_COMPA_vect){ //check wii at timer3
+	 wii_flag=1;	//if comm flag is on, don't run wii check
+	c++;
+	if(c%100==0) {c=0;reopenComm();}	//reopen mRF less often 
+	
 }
 ISR(INT2_vect){	//mRF flag
-	if(wii_flag)wii_flag=0;		//if wii flag is on, cancel it and run comm	
 	comm_flag=1;
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
+	
 }

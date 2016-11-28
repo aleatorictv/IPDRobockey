@@ -3,4 +3,5 @@
 void initComm();
 void parseComm();
 int playing();
+void reopenComm();
 #endif

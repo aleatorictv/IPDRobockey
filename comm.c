@@ -19,6 +19,21 @@ int playing(){
 void parseComm(){
 	m_rf_read(buffer,PACKET_LENGTH);
 	
+	for(int i=0;i<PACKET_LENGTH;i++){
+		switch(buffer[i]){
+			case 0xA1:
+				canPlay = TRUE;
+				break;
+			case 0xA0:
+			case 0xA4:
+			case 0xA6:
+			case 0xA7:
+			default:
+				canPlay=FALSE;
+				break;
+		}
+	}
+	/*
 	if(buffer[0]==commtest){
 		canPlay=FALSE;
 		
@@ -53,7 +68,7 @@ void parseComm(){
 	}else{
 		canPlay=FALSE;
 	}
-	
+	*/
 	if(canPlay){
 		m_red(OFF);
 		m_green(ON);
@@ -65,4 +80,8 @@ void parseComm(){
 void initComm(){
 	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
 	canPlay = FALSE;
+}
+void reopenComm(){
+	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
+	
 }
