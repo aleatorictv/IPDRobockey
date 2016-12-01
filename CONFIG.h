@@ -2,7 +2,7 @@
 #define CONFIG__
 
 #define SYSCLOCK 16000000
-#define WIIFREQ 200
+#define WIIFREQ 400
 #define PUCKFREQ 5
 
 
@@ -16,13 +16,14 @@
 #define CENTER_Y 368
 
 #define FULLCOURT 0
-#define AIM_RIGHT 1
+#define AIM_EAST 1
 
 #define DEBUG_ON 1
 #define DEBUG_POINT 1
 #define DEBUG_IR 0
 #define TEST_FWD 0
 #define TEST_BKD 0
+#define TEST_TURN 0
 #define FIND_CTR 0
 #define QUALIFYING 1
 #define NEED_WII 1
