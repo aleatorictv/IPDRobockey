@@ -4,6 +4,7 @@
 #define SYSCLOCK 16000000
 #define WIIFREQ 400
 #define PUCKFREQ 5
+#define PI 3.14
 
 
 #define RXADDRESS 0x60
@@ -13,7 +14,7 @@
 #define MAX_WIDTH 1024
 #define MAX_HEIGHT 768
 #define CENTER_X 512
-#define CENTER_Y 368
+#define CENTER_Y 384
 
 #define FULLCOURT 0
 #define AIM_EAST 1

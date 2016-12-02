@@ -3,7 +3,8 @@
 #include "helpers.h"
 #include "CONFIG.h"
 
-POINT *pos_wii, *pos;
+POINT *pos_wii;
+POINT *pos;
 float th;
 int axisL=0;
 int pairs[12]={0,1,0,2,0,3,1,2,1,3,2,3};
@@ -33,11 +34,8 @@ POINT *findPos(unsigned int* blobs){
 	//if(!parseBlobs(blobs))return NULL;  //if anything goes wrong, no position reported
 	if(!findDists()) return NULL;
 	if(!findNS()) return NULL;		//if 3 or 4 points visible, position reported
-	else {
-		sprintf(buff,"det: %d %d %.2f\n",pos->x,pos->y,pos->theta);
-		sendBuffer(buff);
-		return pos;
-	}
+	else return pos;
+	
 }
 void parsePoints(unsigned int *blobs, POINT **pts) {
 	n=3;
@@ -170,19 +168,27 @@ void parsePoints(unsigned int *blobs, POINT **pts) {
 			int Ay = pts[trueA]->y;
 			int Bx = pts[trueB]->x;
 			int By = pts[trueB]->y;
-			sprintf(buff,"Ax %d Ay %d Bx %d By %d", Ax, Ay, Bx, By);
-			pos_wii->x = (Ax + Bx)/2 ; //position is center of axis
-			pos_wii->y = (Ay + By)/2 ;
-			float vect1[] = {pts[trueB]->x- pts[trueA]->x, pts[trueB]->y- pts[trueA]->y };	//vector of constellation axis in camera view
-			float vect2[] = {0.f, 1.f};//vector of camera frame vertical
-			//float th = angleBtwnF(vect1,vect2); // maybe faster not to worry about 2 dot prods
-			float th = acos(dotprodF(vect1,vect2)/sqrt(dotprodF(vect1,vect1)));  //angle between frame and true North
-			if(pts[trueB]->x > pts[trueA]->x) th = -th;	//flip sign if in quadrant 3/4
-			sprintf(buff,"frame XY %d %d %.2f\n", pos_wii->x,pos_wii->y,th);
-			sendBuffer(buff);
-			pos->x=cos(th)*(pos_wii->x - CENTER_X) + sin(th)*(pos_wii->y-CENTER_Y);
-			pos->y=sin(th)*(pos_wii->x - CENTER_X) - cos(th)*(pos_wii->y-CENTER_Y);
+			int avgX = (int)(Ax+Bx)/2.;
+			int avgY = (int)(Ay+By)/2.;
+			//pos_wii = initPoint(avgX,avgY);
+			//pos_wii->x = (int) avgX;// (Ax + Bx)/2 ; //position is center of axis
+			//pos_wii->y = (int) avgY; //(Ay + By)/2 ;
+			int vect1[] = {(Bx - Ax),  (By - Ay) };	//vector of constellation axis in camera view
+			int vect2[] = {0, 1};//vector of camera frame vertical
+			float th = angleBtwn(vect1,vect2);
+			//float th = acos(dotprodF(vect1,vect2)/sqrt(dotprodF(vect1,vect1)));  //angle between frame and true North
+			//if(Bx > Ax) th = -th;	//flip sign if in quadrant 3/4
+			//sprintf(buff,"frame XY %d %d %.2f\n", avgX, avgY,th);
+			//sendBuffer(buff);
+			float posx = cos(th) * (avgX - CENTER_X) + sin(th) * (avgY - CENTER_Y);
+			float posy = sin(th) * (avgX - CENTER_X) - cos(th) * (avgY - CENTER_Y);
+			int posX= (int) round( posx);
+			int posY= (int) round( posy);
+			free(pos);
+			pos=initPoint(posX, posY);
 			pos->theta = th;
+			//sprintf(buff,"pos %d %d\n",pos->x,pos->y);
+			//sendBuffer(buff);
 		}
 		return 1;
 	}

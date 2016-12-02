@@ -100,20 +100,27 @@ void init(){
 	
 	m_wait(800);
 	m_green(OFF);
+	robotPos = initPoint(0,0);
 	if(FULLCOURT){
 		if(AIM_EAST) goalPos = initPoint(0,300);
 		else goalPos = initPoint(0,-300);
 	}else if(FIND_CTR){
 		goalPos = initPoint(0,0);  //debug to go to center ice
-	}else if(QUALIFYING){
-		robotPos = locateBot();
+	}
+	else if(QUALIFYING){
+		POINT *rob = initPoint(0,0);
+		rob = locateBot();
+		if(rob!= NULL) robotPos = rob;
+		 else stop();
+		 
 		if(robotPos->x < 0){
 			goalPos = initPoint(300,0);
+			m_usb_tx_string("initialize L\n");
 			}else{
 			goalPos = initPoint(-300,0);
+			m_usb_tx_string("initialize R\n");
 		}
-		m_usb_tx_string("initialize\n");
-}
+	}
 	
 }
 

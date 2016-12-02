@@ -28,26 +28,37 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 		
 	}
 	if(QUALIFYING){
-		int gint[2] = {g->x, g->y};
-		int rint[2] = {r->x,r->y};
-		float targetTh = angleBtwn(gint, rint);
-		float targetD = distance(gint[0],gint[1],rint[0],rint[1]);
+		int r2g[2] = {(int)(r->x - g->x), (int)(r->y - g->y)};
+		int vert[2] = {0,1};
+		float targetTh = angleBtwn(r2g, vert);
+		float targetD = distance(g->x,g->y,r->x,r->y);
+		float errTh = smallestTh(g->theta , targetTh);
 		if(DEBUG_ON) {
 			char buff[100];
-			sprintf(buff,"target %.1f at %.2f\n",targetD, targetTh);
+			sprintf(buff,"Gx %d Gy %d Rx %d Ry %d\n",g->x,g->y,r->x,r->y);
+			sendBuffer(buff);
+			sprintf(buff,"th to target %.2f\n", targetTh);
+			sendBuffer(buff);
+			sprintf(buff,"target %.0f at %.2f\n",targetD, errTh);
 			sendBuffer(buff);
 		}
-		if(abs(targetTh) > 0.1) {
-			if(targetTh>0){
+		if(abs(errTh) > 0.5) {
+			if(errTh>0){
 				 motorPT->x = 0;	//slowly speed turn in place 
-				 motorPT->y =-200;	//big wheel differential
+				 motorPT->y =-100;	//big wheel differential
 			}else{
 				motorPT->x = 0;	//slowly speed turn in place
-				motorPT->y = 200;	//opposite turn direction (hopefully closer direction)
+				motorPT->y = 100;	//opposite turn direction (hopefully closer direction)
 			}
 		}else{	//once aligned travel towards goal
 			motorPT->y=0;
 			motorPT->x = 150;//scale(targetD,5,800,0,255); //run fast then slow as dist to goal shrinks, goes to 0 at 5px from goal
+		}
+		if(abs(targetTh) > 10 ||abs(errTh) >10){
+			motorPT->x =0;
+			motorPT->y=0;
+			m_usb_tx_string("bad pt\n");
+			
 		}
 		
 		
