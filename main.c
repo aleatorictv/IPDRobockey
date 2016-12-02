@@ -66,6 +66,8 @@ int main(void)
 			puck = 0;// findPuck();
 			puck_flag = 0;
 		}
+		if(gotoPos!=NULL) free(gotoPos);
+		gotoPos = initPoint(0,0);
 		gotoPos = setTarget(goalPos,robotPos,puck);
 		if(playing()){
 			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
@@ -73,8 +75,22 @@ int main(void)
 			if(TEST_BKD) setMotors(-255,-255);
 			if(TEST_TURN) setMotors(255,-255);
 		}
+		else if (isFwd()) setMotors(255,255);
 		else stop();
-		
+	}
+}
+void reset(){
+	POINT *rob = initPoint(0,0);
+	rob = locateBot();
+	if(rob!= NULL) robotPos = rob;
+	else stop();
+	
+	if(robotPos->x < 0){
+		goalPos = initPoint(300,0);
+		m_usb_tx_string("initialize L\n");
+		}else{
+		goalPos = initPoint(-300,0);
+		m_usb_tx_string("initialize R\n");
 	}
 }
 void init(){
@@ -101,6 +117,7 @@ void init(){
 	m_wait(800);
 	m_green(OFF);
 	robotPos = initPoint(0,0);
+	gotoPos= initPoint(0,0);
 	if(FULLCOURT){
 		if(AIM_EAST) goalPos = initPoint(0,300);
 		else goalPos = initPoint(0,-300);
@@ -108,18 +125,7 @@ void init(){
 		goalPos = initPoint(0,0);  //debug to go to center ice
 	}
 	else if(QUALIFYING){
-		POINT *rob = initPoint(0,0);
-		rob = locateBot();
-		if(rob!= NULL) robotPos = rob;
-		 else stop();
-		 
-		if(robotPos->x < 0){
-			goalPos = initPoint(300,0);
-			m_usb_tx_string("initialize L\n");
-			}else{
-			goalPos = initPoint(-300,0);
-			m_usb_tx_string("initialize R\n");
-		}
+		reset();
 	}
 	
 }

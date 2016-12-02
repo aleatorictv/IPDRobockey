@@ -25,6 +25,7 @@
 #define TEST_FWD 0
 #define TEST_BKD 0
 #define TEST_TURN 0
+#define RESET 0
 #define FIND_CTR 0
 #define QUALIFYING 1
 #define NEED_WII 1

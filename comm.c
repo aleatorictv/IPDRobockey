@@ -11,7 +11,14 @@ char gameover = 0xA7;
 char buffer[PACKET_LENGTH] = {0,0,0,0,0,0,0,0,0,0};
 int canPlay = FALSE;
 int canRotate = FALSE;
+int canReset = FALSE;
 
+int isReset(){
+	if(canReset){
+		canReset = FALSE;
+		return TRUE;
+	}else return FALSE;
+}
 int isRotate(){
 	return canRotate;
 }
@@ -29,14 +36,7 @@ void parseComm(){
 				canPlay = TRUE;
 				break;
 			case 0xA2:
-				
-				if(canRotate) {
-					canRotate=0;
-					canPlay=0;
-				}else{
-					 canRotate =1;
-					 canPlay=0;
-				}
+				canReset=TRUE;
 				break;
 			case 0xA0:
 			case 0xA4:

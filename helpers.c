@@ -58,8 +58,6 @@ float smallestTh(float th1, float th2) {
 		} else if (theta < -PI) {
 		theta = 2*PI + theta;
 	}
-	sprintf(buff,"small %.2f %.2f %.2f\n",th1,th2,theta);
-	sendBuffer(buff);
 	return theta;
 }
 long dotprod(long v1[], long v2[]){

@@ -14,8 +14,10 @@ POINT *locateBot(){
 		//unsigned int blorbs[12] = {201,	366,0,	164,	312,	0,130,	391,	0,169	,408,0};
 		POINT *newPos = initPoint(0,0);
 		newPos = findPos(blobs);
+		if(DEBUG_ON){
 		sprintf(buff, "new x: %d, y: %d th: %.3f\n", newPos->x, newPos->y,newPos->theta);
 		sendBuffer(buff);
+		}
 		if(currentPos==NULL){ 
 			currentPos = initPoint(0,0);
 		}
