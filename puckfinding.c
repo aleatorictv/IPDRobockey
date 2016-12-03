@@ -13,7 +13,6 @@ int behind = 5;
 
 int findPuck(){
 	puckState = 0;
-	
 	return puckState;
 }
 void initADC(){

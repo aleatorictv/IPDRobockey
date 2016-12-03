@@ -15,8 +15,8 @@ POINT *locateBot(){
 		POINT *newPos = initPoint(0,0);
 		newPos = findPos(blobs);
 		if(DEBUG_ON){
-		sprintf(buff, "new x: %d, y: %d th: %.3f\n", newPos->x, newPos->y,newPos->theta);
-		sendBuffer(buff);
+		//sprintf(buff, "new x: %d, y: %d th: %.3f\n", newPos->x, newPos->y,newPos->theta);
+		//sendBuffer(buff);
 		}
 		if(currentPos==NULL){ 
 			currentPos = initPoint(0,0);

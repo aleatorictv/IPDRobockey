@@ -3,8 +3,7 @@
 #include "helpers.h"
 
 POINT *findPos (unsigned int* blobs);
-void parsePoints(unsigned int *blobs, POINT **pts);
-int parseBlobs(unsigned int*blobs);
+int parsePoints(unsigned int *blobs, POINT **pts);
 int findDists();
 int findNS();
 int rinkTransform();
