@@ -31,7 +31,7 @@ POINT *findPos(unsigned int* blobs){
 	//if(pts[i]!=NULL)free(pts[i]);
 	//}
 	if(!parsePoints(blobs,pts)){		//wii overflows when camera is blocked, need to escape and dump blobs
-		memset(&blobs[0], 0, sizeof(blobs)); 
+	//	memset(&blobs[0], 0, sizeof(blobs)); 
 		 return NULL;
 	}
 	if(!findDists()) return NULL;
@@ -45,15 +45,15 @@ int parsePoints(unsigned int *blobs, POINT **pts) {
 	int i;
 	int p_idx = 0;
 	for (i=0; i<12; i=i+3) {
-		sprintf(buff," blobs %d %u %u\n",i, blobs[i], blobs[i]);
-		sendBuffer(buff);
+		//sprintf(buff," blobs %d %u %u\n",i, blobs[i], blobs[i]);
+		//sendBuffer(buff);
 		if(blobs[i] > 1023)	return 0;
 		
-		if (blobs[i] >0  && blobs[i] < 1023) {
+		if(blobs[i]==1023) n--;
+		else if (blobs[i] < 1023) {
 			if (pts[p_idx] == NULL) pts[p_idx] = initPoint(blobs[i], blobs[i+1]);
 			p_idx++;
 		}
-		if(blobs[i]==1023) n--;
 	}
 	for (; p_idx < 4; p_idx++) {
 	if (pts[p_idx] != NULL) {

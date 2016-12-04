@@ -3,8 +3,13 @@
 #include "targeting.h"
 POINT *motorPT = NULL;
 int fwd=0;
+int t=0;
 //INPUT goal position, robot position, puck location
 //OUTPUT "POINT" variable with motor speeds and directions
+
+void trigger(int _t){
+	t=_t;
+}
 POINT *setTarget(POINT *g, POINT *r, int puck){
 	if(motorPT != NULL) free(motorPT);
 	motorPT=initPoint(0,0);
@@ -27,6 +32,20 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 	}else{//has puck, go to goal
 		
 	}
+	if(TEST_RUN){
+		if(t==0){ 
+			m_red(OFF);
+			motorPT->x = 0;	
+			motorPT->y =-100;
+		}
+		if(t==1){
+			m_red(ON);
+			motorPT->x = 50;
+			motorPT->y = 0;
+			
+		}
+	}
+	
 	if(QUALIFYING){
 		int r2g[2] = {(int)(r->x - g->x), (int)(r->y - g->y)};
 		int vert[2] = {0,1};
@@ -42,7 +61,7 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 			sprintf(buff,"target %.0f at %.2f\n",targetD, errTh);
 			sendBuffer(buff);
 		}
-		if(!fwd && abs(errTh) < 0.1) fwd = TRUE;
+		if(!fwd && abs(errTh) < 0.1) 	fwd = FALSE;
 		
 		if(!fwd) {
 			if(errTh>0){
@@ -51,11 +70,12 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 			}else{
 				motorPT->x = 0;	//slowly speed turn in place
 				motorPT->y = 100;	//opposite turn direction (hopefully closer direction)
-			}
+				
+			}			
 		}else{	//once aligned travel towards goal
 			//setMotors(255,255);
-			//m_red(TOGGLE);
-			motorPT->x=200;
+			m_red(TOGGLE);
+			motorPT->x=100;
 			motorPT->y = 0;//scale(targetD,5,800,0,255); //run fast then slow as dist to goal shrinks, goes to 0 at 5px from goal
 			
 		}
@@ -64,7 +84,4 @@ POINT *setTarget(POINT *g, POINT *r, int puck){
 		
 	}
 	return motorPT;
-}
-int isFwd(){
-	return fwd;
 }

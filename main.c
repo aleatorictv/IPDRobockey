@@ -54,6 +54,9 @@ int main(void)
 		if(comm_flag){
 			m_red(TOGGLE);
 			parseComm();
+			if(isReset()){
+				trigger(1);
+			}else trigger(0);
 			comm_flag = 0;
 			
 		}
@@ -75,7 +78,6 @@ int main(void)
 			if(TEST_BKD) setMotors(-255,-255);
 			if(TEST_TURN) setMotors(255,-255);
 		}
-		else if (isFwd()) setMotors(255,255);
 		else stop();
 	}
 }
@@ -136,7 +138,7 @@ ISR( TIMER0_COMPA_vect){  //check puck at timer0
 ISR(TIMER3_COMPA_vect){ //check wii at timer3
 	wii_flag=1;	
 	c++;
-	if(c==100) {
+	if(c==1000) {
 		c=0;
 		reopenComm();
 		m_green(TOGGLE);
