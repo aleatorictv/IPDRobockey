@@ -44,6 +44,9 @@ volatile int puck_flag = 0;
 int puck=0;
 int c = 0; //count a bunch of times of wii timer to reopen comm interval
 int rotate = 0;
+int *puckData = NULL;// ={0,0,0,0,0,0,0,0,0};
+char buff[100];
+
 void init();
 
 int main(void)
@@ -66,19 +69,21 @@ int main(void)
 			wii_flag = 0;
 		}
 		if(puck_flag){
-			puck = 0;// findPuck();
+			puck = findPuck();
 			puck_flag = 0;
 		}
-		if(gotoPos!=NULL) free(gotoPos);
-		gotoPos = initPoint(0,0);
-		gotoPos = setTarget(goalPos,robotPos,puck);
-		if(playing()){
-			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
-			if(TEST_FWD) setMotors(255,255);
-			if(TEST_BKD) setMotors(-255,-255);
-			if(TEST_TURN) setMotors(255,-255);
-		}
-		else stop();
+			
+		
+		//if(gotoPos!=NULL) free(gotoPos);
+		//gotoPos = initPoint(0,0);
+		//gotoPos = setTarget(goalPos,robotPos,puck);
+		//if(playing()){
+			//moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+			//if(TEST_FWD) setMotors(255,255);
+			//if(TEST_BKD) setMotors(-255,-255);
+			//if(TEST_TURN) setMotors(255,-255);
+		//}
+		//else stop();
 	}
 }
 void reset(){
@@ -108,6 +113,7 @@ void init(){
 	initTimer1();
 	initTimer3();
 	initADC();
+	
 	if(NEED_WII){
 		while(!m_wii_open()){
 			m_red(ON);
@@ -129,6 +135,8 @@ void init(){
 	else if(QUALIFYING){
 		reset();
 	}
+	set(DDRB,3);
+	clear(PORTB,3);
 	
 }
 
@@ -149,5 +157,5 @@ ISR(INT2_vect){	//mRF flag
 	comm_flag=1;
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
-	
+	//updateADC() handles values of ADC
 }
