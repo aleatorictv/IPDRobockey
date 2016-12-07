@@ -77,9 +77,10 @@ int main(void)
 		
 		if(gotoPos!=NULL) free(gotoPos);
 		gotoPos = initPoint(0,0);
+		
 		gotoPos = setTarget(goalPos,robotPos,puck);
 		if(playing()){
-			//moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
+			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
 			if(TEST_FWD) setMotors(255,255);
 			if(TEST_BKD) setMotors(-255,-255);
 			if(TEST_TURN) setMotors(255,-255);

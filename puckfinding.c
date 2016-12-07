@@ -8,31 +8,43 @@ int *puckState;
 
 int *findPuck(){
 	updateADC();
-	int ps[3] = {-1,-1,-1};	
-	int pairs[8]={0,0,0,0,0,0,0,0};
+	int ps[4] = {-1,-1,-1,-1};
+	float scaled[9]={0,0,0,0,0,0,0,0,0};
+	int noms[9]={32,32,49,32,37,34,104,39,125}; //average values with no puck
+	int maxSens[9] = {1000,900,900,900,100,900,400,200, 300}; //value at longest range where distinguishable aligned
+
+	for(int i=0;i<9;i++){
+		scaled[i] = (sensors[i]-noms[i])*1.0f/(maxSens[i]-noms[i]);  // proportional measurement of current read to max read 
+	}
 	
-	pairs[0] = (sensors[5] + sensors[4])/2; //inside puck mouth
-	pairs[1] = (sensors[3] + sensors[6])/2; //forward facing
-	pairs[2] = (sensors[2] + sensors[3])/2; //fwd left
-	pairs[3] = (sensors[2] + sensors[1])/2; //left
-	pairs[4] = (sensors[1] + sensors[0])/2; //back left
-	pairs[5] = (sensors[8] + sensors[0])/2; //back right
-	pairs[6] = (sensors[8] + sensors[7])/2; //right
-	pairs[7] = (sensors[7] + sensors[6])/2; //fwd left
-	
-	ps[0] = max(pairs,8);
-	if(ps[0] >180) ps[1]= 1;
-	else ps[1]  = 0;
-	ps[2] = !check(PIND,5);
-	if(ps[2]) green(1);
+	ps[0] = maxF(scaled,9);
+	ps[1] = sensors[ps[0]];
+	if(scaled[ps[0]] > .63) ps[2]= 1;	//clear activation
+	else ps[2]  = 0;					//can't find it
+	ps[3] = !check(PIND,5);
+	if(ps[3]) green(1);
 	else green(0);
 	
 	puckState=&ps[0];
-	//sprintf(buff,"pairs: %d %d %d %d %d %d %d %d \n", pairs[0],pairs[1],pairs[2],pairs[3],pairs[4],pairs[5],pairs[6],pairs[7]);
+	//sprintf(buff,"puckstates: %d %d %d %d \n", ps[0], ps[1], ps[2],ps[3]);
 	//sendBuffer(buff);
-	sprintf(buff,"puckstates: %d %d %d \n", *(puckState+0), ps[1], ps[2]);
-	sendBuffer(buff);
 	return puckState;
+}
+void updateADC(){
+	
+	//run through 9 sensors in sequence and wait till all conversions are done
+	sensors[0] = checkF0();
+	sensors[1] = checkF1();
+	sensors[2] = checkF4();
+	sensors[3] = checkF5();
+	sensors[4] = checkF6();
+	sensors[5] = checkF7();
+	sensors[6] = checkD6();
+	sensors[7] = checkD4();
+	sensors[8] = checkD7();
+	//sprintf(buff,"LTRs: %d %d %d %d %d %d %d %d %d\n", sensors[0], sensors[1], sensors[2],sensors[3],sensors[4],sensors[5], sensors[6], sensors[7], sensors[8]);
+	//sendBuffer(buff);
+	
 }
 void initADC(){
 	//puck in mouth switch input
@@ -87,22 +99,6 @@ void initADC(){
 	set(DIDR2,ADC10D); //D7
 	// TRIGGERING
 	set(ADCSRA, ADATE); // in free-running state
-}
-void updateADC(){
-	
-	//run through 9 sensors in sequence and wait till all conversions are done
-	sensors[0] = checkF0();
-	sensors[1] = checkF1();
-	sensors[2] = checkF4();
-	sensors[3] = checkF5();
-	sensors[4] = checkF6();
-	sensors[5] = checkF7();
-	sensors[6] = checkD6();
-	sensors[7] = checkD4();
-	sensors[8] = checkD7();
-	sprintf(buff,"LTRs: %d %d %d %d %d %d %d %d %d\n", sensors[0], sensors[1], sensors[2],sensors[3],sensors[4],sensors[5], sensors[6], sensors[7], sensors[8]);
-	sendBuffer(buff);
-	
 }
 int checkF0(){
 	//PAUSE ADC to avoid interrupting interrupts

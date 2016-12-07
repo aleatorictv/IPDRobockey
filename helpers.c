@@ -18,7 +18,24 @@ int max(int arr[], int size){
 	int r=-1;
 	for (int c = 0 ; c < size ; c++)
 	{
-		if (arr[c] > arr[r])  r =c ;  //index of largest int in array
+		if (r==-1 || arr[c] > arr[r])  r =c ;  //index of largest int in array
+	}
+	return r;
+}
+int maxF(float arr[], int size){
+	int r=-1;
+	for (int c = 0 ; c < size ; c++)
+	{
+		if (r==-1 || arr[c] > arr[r] )  r =c ;  //index of largest float in array
+
+	}
+	return r;
+}
+int min(int arr[], int size){
+	int r=1500;
+	for (int c = 0 ; c < size ; c++)
+	{
+		if (arr[c] < arr[r])  r =c ;  //index of smallest int in array
 	}
 	return r;
 }

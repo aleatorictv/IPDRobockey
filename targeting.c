@@ -40,49 +40,60 @@ POINT *setTarget(POINT *g, POINT *r, int *puck){
 		
 	}
 	if(TEST_SENSORS){
-		if(*(puck+1)){
-		switch(*puck){
-			case 0:	//captured, go!
-			motorPT->x = 0;
-			motorPT->y = 0;
+		sprintf(buff,"puck: %d %d %d %d \n", puck[0], puck[1], puck[2],puck[3]);
+		sendBuffer(buff);
+		if(!puck[2]){
+			green(OFF);
+			switch(*puck){
+				case 0:	//back
+				motorPT->x = 255;
+				motorPT->y =- 255;
+				break;
+				case 1:	//back left
+				motorPT->x =200;
+				motorPT->y =-200;
+				break;
+				case 2: // left
+				motorPT->x=100;
+				motorPT->y=-100;
+				break;
+				case 3: //forward slight left
+				motorPT->x=50;
+				motorPT->y=-50;
+				break;
+				case 4: //straight ahead (maybe off to right)
+				motorPT->x=0;
+				motorPT->y=0;
+				break;
+				case 5: // straight ahead (left a little
+				motorPT->x=0;
+				motorPT->y=0;
+				break;
+				case 6: // forward slight right
+				motorPT->x=-50;
+				motorPT->y=50;
+				break;
+				case 7: // right
+				motorPT->x=-100;
+				motorPT->y=100;
+				break;
+				case 8: // back right
+				motorPT->x = -200;
+				motorPT->y = 200;
+				default: //spin?
+				motorPT->x=0;
+				motorPT->y=-0;
+				break;
+			}
+		}else{
+			motorPT->x=0;
+			motorPT->y=0;
 			green(ON);
-			break;
-			case 1:	//forward	dead reckoned
-			motorPT->x =0;
-			motorPT->y =0;
-			break;
-			case 2: //+60 deg //turn slow to left
-			motorPT->x=-30;
-			motorPT->y=30;
-			green(OFF);
-			break;
-			case 3: //+90
-			motorPT->x=-90;
-			motorPT->y=90;
-			green(OFF);
-			break;
-			case 4: //+150
-			motorPT->x=-150;
-			motorPT->y=150;
-			break;
-			case 5: // -150
-			motorPT->x=150;
-			motorPT->y=-150;
-			break;
-			case 6: // -90
-			motorPT->x=100;
-			motorPT->y=-100;
-			green(OFF);
-			break;
-			case 7: // -60
-			motorPT->x=30;
-			motorPT->y=-30;
-			break;
-			default: //spin?
-			motorPT->x=100;
-			motorPT->y=-100;
-			break;
+			
 		}
+		if(puck[3]){
+			motorPT->x=100;	//push puck
+			motorPT->y=100;
 		}
 		//sprintf(buff,"send %d %d\n",motorPT->x,motorPT->y);
 		//sendBuffer(buff);

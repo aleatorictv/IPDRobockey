@@ -10,6 +10,7 @@ typedef struct POINT {
 	float theta;
 } POINT;
 int max(int arr[], int size);
+int maxF(float arr[], int size);
 double sqroot(double square);
 POINT *initPoint(int x, int y);
 float distancePT(POINT *p1, POINT *p2);
