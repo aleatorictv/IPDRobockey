@@ -17,8 +17,8 @@ void moveBots(POINT *p){
 	//					-Y =  L back/ R fwd  = CCW turn
 	//					0 = L / R same dir
 	//					+Y = L fwd / R back = CW turn
-	int L = p->x - p->y;
-	int R = p->x + p->y;
+	int L = p->x ;
+	int R = p->y;
 	setMotors(L,R);
 
 		
@@ -33,7 +33,7 @@ void setMotors(int L, int R){	//input duty cycles as signed ints
 	if(abs(L)>255) L=255;
 	OCR1A = abs(L);
 	
-	if(R < 0) set(PORTC , 6); //right motor dir and duty cycle
+	if(R > 0) set(PORTC , 6); //right motor dir and duty cycle
 	else clear(PORTC,6);
 	if(abs(R)>255) R=255;
 	OCR1B = abs(R);

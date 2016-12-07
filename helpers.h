@@ -9,6 +9,7 @@ typedef struct POINT {
 	int y;
 	float theta;
 } POINT;
+int max(int arr[], int size);
 double sqroot(double square);
 POINT *initPoint(int x, int y);
 float distancePT(POINT *p1, POINT *p2);
@@ -23,5 +24,11 @@ float angleBtwnF(float *pf1, float *pf2);
 float smallestTh(float th1, float th2);
 void sendBuffer(char *buff);
 void sendFloat(float f);
+void initLEDs();
+void redteam();
+void blueteam();
+void red(int i);
+void blue(int i);
+void green(int i);
 
 #endif

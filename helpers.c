@@ -14,6 +14,14 @@ POINT *initPoint(int x,int y){
 	pt->y = y;
 	return pt;
 }
+int max(int arr[], int size){
+	int r=-1;
+	for (int c = 0 ; c < size ; c++)
+	{
+		if (arr[c] > arr[r])  r =c ;  //index of largest int in array
+	}
+	return r;
+}
 double sqroot(double square)
 {
 	double root=square/3, last, diff=1;
@@ -78,4 +86,43 @@ void sendBuffer(char *buf) {
 void sendFloat(float f){
 	sprintf(buff,"%.3f\n",f);
 	sendBuffer(buff);
+}
+void initLEDs(){
+	//////SWITCHES
+	clear(DDRB,0);	// TEAM decision switch
+	set(PORTB , 0);
+	
+	//LEDS ////////////////////
+	set(DDRB,3);	//red team
+	clear(PORTB,3);
+	set(DDRB,2);	//blue team
+	clear(PORTB,2);
+	set(DDRB,1);	//green debug
+	clear(PORTB,1);
+	//set(DDRB,7);	//blue debug?
+	//set(PORTB,7);
+	set(DDRD,3);	//red? debug
+	clear(PORTD,3);
+	
+
+}
+void redteam(){
+	set(PORTB,3);
+	clear(PORTB,2);
+}
+void blueteam(){
+	set(PORTB,2);
+	clear(PORTB,3);
+}
+void red(int i){
+	if(i) set(PORTD,3);
+	else  clear(PORTD,3);
+}
+void blue(int i){
+	if(i) set(PORTB,7);
+	else  clear(PORTB,7);
+}
+void green(int i){
+	if(i) set(PORTB,1);
+	else  clear(PORTB,1);
 }

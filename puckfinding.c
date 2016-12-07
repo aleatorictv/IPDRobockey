@@ -2,25 +2,43 @@
 #include "CONFIG.h"
 #include "puckfinding.h"
 
-int puckState;
-int lastPuck;
-int hasPuck =0;
-int front = 1;
-int nearFront = 2;
-int left = 3;
-int right = 4;
-int behind = 5;
-
-int sensors[8]={0,0,0,0,0,0,0,0};
-
+int sensors[9]={0,0,0,0,0,0,0,0,0};
 char buff[100];
+int *puckState;
 
-int findPuck(){
-	puckState = 0;
+int *findPuck(){
 	updateADC();
+	int ps[3] = {-1,-1,-1};	
+	int pairs[8]={0,0,0,0,0,0,0,0};
+	
+	pairs[0] = (sensors[5] + sensors[4])/2; //inside puck mouth
+	pairs[1] = (sensors[3] + sensors[6])/2; //forward facing
+	pairs[2] = (sensors[2] + sensors[3])/2; //fwd left
+	pairs[3] = (sensors[2] + sensors[1])/2; //left
+	pairs[4] = (sensors[1] + sensors[0])/2; //back left
+	pairs[5] = (sensors[8] + sensors[0])/2; //back right
+	pairs[6] = (sensors[8] + sensors[7])/2; //right
+	pairs[7] = (sensors[7] + sensors[6])/2; //fwd left
+	
+	ps[0] = max(pairs,8);
+	if(ps[0] >180) ps[1]= 1;
+	else ps[1]  = 0;
+	ps[2] = !check(PIND,5);
+	if(ps[2]) green(1);
+	else green(0);
+	
+	puckState=&ps[0];
+	//sprintf(buff,"pairs: %d %d %d %d %d %d %d %d \n", pairs[0],pairs[1],pairs[2],pairs[3],pairs[4],pairs[5],pairs[6],pairs[7]);
+	//sendBuffer(buff);
+	sprintf(buff,"puckstates: %d %d %d \n", *(puckState+0), ps[1], ps[2]);
+	sendBuffer(buff);
 	return puckState;
 }
 void initADC(){
+	//puck in mouth switch input
+	clear(DDRD,5);
+	set(PORTD,5);
+	
 	//Enable input on F0-4
 	m_disableJTAG();
 	
@@ -72,7 +90,7 @@ void initADC(){
 }
 void updateADC(){
 	
-	//run through 9 sensors in sequence and wait till all conversions are done 
+	//run through 9 sensors in sequence and wait till all conversions are done
 	sensors[0] = checkF0();
 	sensors[1] = checkF1();
 	sensors[2] = checkF4();
@@ -109,10 +127,10 @@ int checkF1(){
 	clear(ADCSRA,ADEN);
 	
 	//check F1
-    clear(ADCSRB,MUX5);
-    clear(ADMUX,MUX2);
-    clear(ADMUX,MUX1);
-    set(ADMUX, MUX0);
+	clear(ADCSRB,MUX5);
+	clear(ADMUX,MUX2);
+	clear(ADMUX,MUX1);
+	set(ADMUX, MUX0);
 
 	//enable ADC subsystem
 	set(ADCSRA,ADEN);//begin conversion

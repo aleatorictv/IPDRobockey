@@ -26,11 +26,12 @@
 #define TEST_BKD 0
 #define TEST_TURN 0
 #define TEST_RUN 0
+#define TEST_SENSORS 1
 #define RESET 0
 #define FIND_CTR 0
 #define QUALIFYING 0
 #define NEED_WII 0
-#define NEED_COMM 1
+#define NEED_COMM 0
 
 
 

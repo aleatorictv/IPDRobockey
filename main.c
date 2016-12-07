@@ -38,13 +38,12 @@ qualifying test
 POINT *goalPos = NULL;
 POINT *robotPos = NULL;
 POINT *gotoPos = NULL;
+int *puck;
 volatile int wii_flag = 0;
 volatile int comm_flag = 0;
 volatile int puck_flag = 0;
-int puck=0;
 int c = 0; //count a bunch of times of wii timer to reopen comm interval
 int rotate = 0;
-int *puckData = NULL;// ={0,0,0,0,0,0,0,0,0};
 char buff[100];
 
 void init();
@@ -65,25 +64,27 @@ int main(void)
 		}
 		if(wii_flag){
 			m_green(TOGGLE);
-			robotPos = locateBot();
+			//robotPos = locateBot();
 			wii_flag = 0;
 		}
 		if(puck_flag){
 			puck = findPuck();
 			puck_flag = 0;
 		}
-			
 		
-		//if(gotoPos!=NULL) free(gotoPos);
-		//gotoPos = initPoint(0,0);
-		//gotoPos = setTarget(goalPos,robotPos,puck);
-		//if(playing()){
+		if(check(PIND,5)) redteam();
+		else blueteam();
+		
+		if(gotoPos!=NULL) free(gotoPos);
+		gotoPos = initPoint(0,0);
+		gotoPos = setTarget(goalPos,robotPos,puck);
+		if(playing()){
 			//moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
-			//if(TEST_FWD) setMotors(255,255);
-			//if(TEST_BKD) setMotors(-255,-255);
-			//if(TEST_TURN) setMotors(255,-255);
-		//}
-		//else stop();
+			if(TEST_FWD) setMotors(255,255);
+			if(TEST_BKD) setMotors(-255,-255);
+			if(TEST_TURN) setMotors(255,-255);
+		}
+		else stop();
 	}
 }
 void reset(){
@@ -135,8 +136,7 @@ void init(){
 	else if(QUALIFYING){
 		reset();
 	}
-	set(DDRB,3);
-	clear(PORTB,3);
+	initLEDs();
 	
 }
 

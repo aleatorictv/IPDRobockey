@@ -11,5 +11,5 @@ int checkD6();
 int checkD7();
 void initADC();
 void updateADC();
-int findPuck();
+int *findPuck();
 #endif
