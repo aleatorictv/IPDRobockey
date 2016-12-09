@@ -15,6 +15,9 @@ int puckSw = -1;
 int starttime=0;
 int prevState=0;
 int turnState=0;
+int fwd2sec = 0;
+int left2sec =0;
+int loopTime=0;
 char buff[100];
 
 void setT(){
@@ -41,8 +44,8 @@ POINT *dance(POINT *g, POINT *r, int *_puck){
 		if(puckVal > 200 && puckVal <1200) state =4;
 		if(!check(PIND,5))  state = 5;
 }
-sprintf(buff,"puck %d %d %d\n",state,puckAng, puckVal);
-sendBuffer(buff);
+//sprintf(buff,"puck %d %d %d\n",state,puckAng, puckVal);
+//sendBuffer(buff);
 	if(JUST_ROAM) state=0;
 	switch(state){
 		case 0: //no wii, no puck = roam
@@ -68,9 +71,25 @@ sendBuffer(buff);
 		 starttime=0;
 		 prevState=state;
 	}
-	if(currTime<10){ forward();}	//opening move
+	if(currTime<3){ forward();}	//opening move
 	//else roam();
-	
+	//if(fwd2sec ){
+		//if(!loopTime) loopTime=currTime;
+		 //if(currTime-loopTime < 1) forward();
+		 //else {
+			 //loopTime=0;
+			 //fwd2sec=0;
+		 //}
+	//}
+	//if(left2sec){
+		//if(!loopTime) loopTime=currTime;
+		//if(currTime-loopTime < 1) left();
+		//else {
+			//loopTime=0;
+			//left2sec=0;
+		//}
+		//
+	//}
 	return m;
 }
 void left(){
@@ -107,9 +126,9 @@ void roam(){
 void aim(){
 	green(1);
 	if(!starttime){ starttime=currTime;}
-	if((puckAng == 0 || puckAng ==1 || puckAng ==2 )&& currTime<starttime+2) left();
-	else if((puckAng == 8 || puckAng ==7)&& currTime < starttime+2) right();
-	else { forward(); starttime =0;}
+	if(puckAng == 0 || puckAng ==1 || puckAng ==2) left();
+	else if(puckAng == 8 || puckAng ==7) right();
+	else  forward();
 	if(currTime-starttime >20) roam();
 }
 void roamPos(){

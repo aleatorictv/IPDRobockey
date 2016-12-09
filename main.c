@@ -75,8 +75,6 @@ int main(void)
 			puck_flag = 0;
 		}
 		
-		if(check(PIND,5)) redteam();
-		else blueteam();
 		
 		if(gotoPos!=NULL) free(gotoPos);
 		gotoPos = initPoint(0,0);

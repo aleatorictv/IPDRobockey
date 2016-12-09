@@ -21,7 +21,7 @@
 #define TEAM_SW 1	//use switch to determine team
 #define BLUETEAM 0
 
-#define DEBUG_ON 0
+#define DEBUG_ON 1
 #define TEST_FWD 0
 #define TEST_BKD 0
 #define TEST_TURN 0
@@ -31,7 +31,7 @@
 #define FIND_CTR 0
 #define QUALIFYING 0
 #define JUSTGO 0
-#define JUST_ROAM 0
+#define JUST_ROAM 1
 #define NEED_WII 0
 #define NEED_COMM 1
 
