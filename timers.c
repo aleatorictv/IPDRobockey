@@ -51,3 +51,7 @@ void initTimer3() {
 
 	set(TIMSK3,OCIE3A);//compare to OCR3A
 }
+
+void initTimer4(){
+	
+}

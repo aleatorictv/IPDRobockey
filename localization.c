@@ -37,7 +37,6 @@ POINT *findPos(unsigned int* blobs){
 	if(!findDists()) return NULL;
 	if(!findNS()) return NULL;		//if 3 or 4 points visible, position reported
 	else return pos;
-	//return NULL ;
 	
 }
 int parsePoints(unsigned int *blobs, POINT **pts) {

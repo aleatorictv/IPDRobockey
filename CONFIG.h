@@ -16,22 +16,23 @@
 #define CENTER_X 512
 #define CENTER_Y 384
 
-#define FULLCOURT 0
-#define AIM_EAST 1
+#define GAMETIME 1	//full court and systems
+#define AIM_EAST 0	//use localization to detremine team
+#define TEAM_SW 1	//use switch to determine team
+#define BLUETEAM 0
 
-#define DEBUG_ON 1
-#define DEBUG_POINT 1
-#define DEBUG_IR 0
+#define DEBUG_ON 0
 #define TEST_FWD 0
 #define TEST_BKD 0
 #define TEST_TURN 0
 #define TEST_RUN 0
-#define TEST_SENSORS 1
+#define TEST_SENSORS 0
 #define RESET 0
 #define FIND_CTR 0
 #define QUALIFYING 0
+#define JUSTGO 0
 #define NEED_WII 0
-#define NEED_COMM 0
+#define NEED_COMM 1
 
 
 

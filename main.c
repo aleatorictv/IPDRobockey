@@ -1,6 +1,10 @@
 /*
 
-qualifying test
+ROBOCOKEY GO CODE WIN ! 
+
+James = Software
+Gaute = Build
+Michael = Wildcard
 
 */
 
@@ -38,13 +42,14 @@ qualifying test
 POINT *goalPos = NULL;
 POINT *robotPos = NULL;
 POINT *gotoPos = NULL;
-int *puck;
+int *puck=NULL;
 volatile int wii_flag = 0;
 volatile int comm_flag = 0;
 volatile int puck_flag = 0;
 int c = 0; //count a bunch of times of wii timer to reopen comm interval
 int rotate = 0;
 char buff[100];
+int ct =0;
 
 void init();
 
@@ -54,17 +59,13 @@ int main(void)
 	while (1)
 	{
 		if(comm_flag){
-			m_red(TOGGLE);
 			parseComm();
-			if(isReset()){
-				trigger(1);
-			}else trigger(0);
 			comm_flag = 0;
 			
 		}
 		if(wii_flag){
 			m_green(TOGGLE);
-			//robotPos = locateBot();
+			robotPos = locateBot();
 			wii_flag = 0;
 		}
 		if(puck_flag){
@@ -77,7 +78,6 @@ int main(void)
 		
 		if(gotoPos!=NULL) free(gotoPos);
 		gotoPos = initPoint(0,0);
-		
 		gotoPos = setTarget(goalPos,robotPos,puck);
 		if(playing()){
 			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
@@ -108,7 +108,7 @@ void init(){
 	m_green(ON);
 	if(DEBUG_ON){
 		m_usb_init();
-		m_usb_tx_string("USB connected.\n");
+		//m_usb_tx_string("USB connected.\n");
 	}
 	initMotors();
 	initTimer0();
@@ -122,22 +122,35 @@ void init(){
 		}
 		m_red(OFF);
 	}
-	if(NEED_COMM)	initComm();
+	initComm();
 	
 	m_wait(800);
 	m_green(OFF);
 	robotPos = initPoint(0,0);
 	gotoPos= initPoint(0,0);
-	if(FULLCOURT){
+	
+	initLEDs();
+	if(GAMETIME){
 		if(AIM_EAST) goalPos = initPoint(0,300);
 		else goalPos = initPoint(0,-300);
+		if(TEAM_SW) {
+			//sprintf(buff,"%d \n",check(PINB,0));
+			//sendBuffer(buff);
+			if(check(PINB,0)) {
+				goalPos=initPoint(0,300);
+				blueteam();
+			}else{
+				goalPos=initPoint(0,-300);
+				//redteam();
+				red(1);
+			}
+		}
 	}else if(FIND_CTR){
 		goalPos = initPoint(0,0);  //debug to go to center ice
 	}
 	else if(QUALIFYING){
 		reset();
 	}
-	initLEDs();
 	
 }
 
@@ -145,17 +158,25 @@ ISR( TIMER0_COMPA_vect){  //check puck at timer0
 	puck_flag=1;
 }
 ISR(TIMER3_COMPA_vect){ //check wii at timer3
-	wii_flag=1;	
+	if(NEED_WII) wii_flag=1;	
+		
 	c++;
-	if(c==1000) {
+	if(c==100) {
 		c=0;
 		reopenComm();
-		m_green(TOGGLE);
+		setT();
+		if( isCommTest()&& ct<7){
+			ct++;
+			toggle(PORTB,2);//blink blue
+			if(ct==4){
+				ct=0;
+				commtestoff();
+			}
 		}	//reopen mRF less often 
-	
+	}
 }
 ISR(INT2_vect){	//mRF flag
-	comm_flag=1;
+	if(NEED_COMM) comm_flag=1;
 }
 ISR(ADC_vect){  //clear ADIF flag automatically
 	//updateADC() handles values of ADC

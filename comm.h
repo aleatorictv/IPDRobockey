@@ -2,7 +2,8 @@
 #define comm__
 void initComm();
 void parseComm();
-int isRotate();
+void commtestoff();
+int isCommTest();
 int playing();
 void reopenComm();
 #endif

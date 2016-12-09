@@ -39,17 +39,17 @@ int min(int arr[], int size){
 	}
 	return r;
 }
-double sqroot(double square)
-{
-	double root=square/3, last, diff=1;
-	if (square <= 0) return 0;
-	do {
-		last = root;
-		root = (root + square / root) / 2;
-		diff = root - last;
-	} while (diff > MINDIFF || diff < -MINDIFF);
-	return root;
-}
+//double sqroot(double square)
+//{
+	//double root=square/3, last, diff=1;
+	//if (square <= 0) return 0;
+	//do {
+		//last = root;
+		//root = (root + square / root) / 2;
+		//diff = root - last;
+	//} while (diff > MINDIFF || diff < -MINDIFF);
+	//return root;
+//}
 float distancePT(POINT *p1, POINT *p2) {
 	//sprintf(buff,"Px Py %d %d %d ;\n",p1->x,p2->x,(p1->x-p2->x));
 	//sendBuffer(buff);
@@ -110,26 +110,22 @@ void initLEDs(){
 	set(PORTB , 0);
 	
 	//LEDS ////////////////////
-	set(DDRB,3);	//red team
-	clear(PORTB,3);
-	set(DDRB,2);	//blue team
-	clear(PORTB,2);
 	set(DDRB,1);	//green debug
 	clear(PORTB,1);
 	//set(DDRB,7);	//blue debug?
-	//set(PORTB,7);
+	//clear(PORTB,7);
 	set(DDRD,3);	//red? debug
 	clear(PORTD,3);
 	
 
 }
 void redteam(){
-	set(PORTB,3);
-	clear(PORTB,2);
+	set(DDRB,3);	//red team
+	//set(PORTB,3);
 }
 void blueteam(){
+	set(DDRB,2);	//blue team
 	set(PORTB,2);
-	clear(PORTB,3);
 }
 void red(int i){
 	if(i) set(PORTD,3);

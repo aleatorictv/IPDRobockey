@@ -11,7 +11,7 @@ int *findPuck(){
 	int ps[4] = {-1,-1,-1,-1};
 	float scaled[9]={0,0,0,0,0,0,0,0,0};
 	int noms[9]={32,32,49,32,37,34,104,39,125}; //average values with no puck
-	int maxSens[9] = {1000,900,900,900,100,900,400,200, 300}; //value at longest range where distinguishable aligned
+	int maxSens[9] = {700,700,700,400,500,700,700,1000, 1000}; //value at longest range where distinguishable aligned
 
 	for(int i=0;i<9;i++){
 		scaled[i] = (sensors[i]-noms[i])*1.0f/(maxSens[i]-noms[i]);  // proportional measurement of current read to max read 

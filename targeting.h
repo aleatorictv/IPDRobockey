@@ -2,4 +2,5 @@
 #define targeting__
 POINT *setTarget(POINT *g, POINT *r, int _puck);
 void trigger(int t);
+void setT(int t);
 #endif
