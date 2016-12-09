@@ -31,6 +31,7 @@
 #define FIND_CTR 0
 #define QUALIFYING 0
 #define JUSTGO 0
+#define JUST_ROAM 0
 #define NEED_WII 0
 #define NEED_COMM 1
 

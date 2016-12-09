@@ -29,6 +29,7 @@ Michael = Wildcard
 #include "comm.h"
 #include "motorcontrol.h"
 #include "puckfinding.h"
+#include "gameday.h"
 
 #include "localization.c"
 #include "helpers.c"
@@ -38,6 +39,7 @@ Michael = Wildcard
 #include "comm.c"
 #include "motorcontrol.c"
 #include "puckfinding.c"
+#include "gameday.c"
 
 POINT *goalPos = NULL;
 POINT *robotPos = NULL;
@@ -50,7 +52,7 @@ int c = 0; //count a bunch of times of wii timer to reopen comm interval
 int rotate = 0;
 char buff[100];
 int ct =0;
-
+int start =0;
 void init();
 
 int main(void)
@@ -65,7 +67,7 @@ int main(void)
 		}
 		if(wii_flag){
 			m_green(TOGGLE);
-			robotPos = locateBot();
+			if(NEED_WII) robotPos = locateBot();
 			wii_flag = 0;
 		}
 		if(puck_flag){
@@ -78,8 +80,10 @@ int main(void)
 		
 		if(gotoPos!=NULL) free(gotoPos);
 		gotoPos = initPoint(0,0);
-		gotoPos = setTarget(goalPos,robotPos,puck);
+		//gotoPos = setTarget(goalPos,robotPos,puck);
+		gotoPos = dance(goalPos,robotPos,puck);
 		if(playing()){
+			if(!start)start=1;
 			moveBots(gotoPos);	//repurpose POINT struct for dist/rotation variable
 			if(TEST_FWD) setMotors(255,255);
 			if(TEST_BKD) setMotors(-255,-255);
@@ -158,13 +162,15 @@ ISR( TIMER0_COMPA_vect){  //check puck at timer0
 	puck_flag=1;
 }
 ISR(TIMER3_COMPA_vect){ //check wii at timer3
-	if(NEED_WII) wii_flag=1;	
+	 wii_flag=1;	
 		
 	c++;
 	if(c==100) {
 		c=0;
 		reopenComm();
-		setT();
+		if(playing()) setT();
+		else green(0);
+		m_green(TOGGLE);
 		if( isCommTest()&& ct<7){
 			ct++;
 			toggle(PORTB,2);//blink blue

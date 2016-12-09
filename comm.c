@@ -56,5 +56,5 @@ void initComm(){
 	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
 }
 void reopenComm(){
-	m_rf_open(1,0x60,PACKET_LENGTH); //configure m_rf
+	m_rf_open(CHANNEL,RXADDRESS,PACKET_LENGTH); //configure m_rf
 }

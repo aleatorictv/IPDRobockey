@@ -10,12 +10,7 @@ int hasPuck=0;
 int openMove = 1;
 int searchPuck =0;
 POINT *robot = NULL;
-long currTime =0;
 
-
-void setT(){
-	currTime++;
-}
 void trigger(int _t){
 	t=_t;
 }
